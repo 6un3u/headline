@@ -20,6 +20,7 @@ def crawl():
     c = b.decode('cp949')
     f.close()
 
+    pubId = find('"officeId" : "(.*)"', c)
     office = find('"officeName" : "(.*)"', c)
     title = find('"title" : "(.*)"', c)
 
@@ -32,6 +33,7 @@ def crawl():
                 pass
             else: 
                 n = [];
+                n.append(int(pubId[num])); 
                 n.append(i);
                 if('\\' in title[num]):
                     title[num] = title[num].replace('\\', '');
@@ -39,4 +41,3 @@ def crawl():
                 news.append(n);
             num+=1
     return news;
-
