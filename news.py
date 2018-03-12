@@ -33,7 +33,7 @@ def crawl():
                 pass
             else: 
                 n = [];
-                n.append(int(pubId[num])); 
+                n.append(pubId[num]);
                 n.append(i);
                 if('\\' in title[num]):
                     title[num] = title[num].replace('\\', '');
