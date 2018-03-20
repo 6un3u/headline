@@ -12,7 +12,9 @@ def index():
     c = con.cursor()
     c.execute("select * from headline where day='%s'" % date)
     result = c.fetchall()
-    return str(result)
+    c.close()
+    output = template('make_table', rows=result)
+    return output 
 
 run(host='0.0.0.0', debug=True)
 #run(port=8080)
