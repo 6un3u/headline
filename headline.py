@@ -1,29 +1,27 @@
-#!/usr/bin/python3
 import sqlite3
+from bottle import route, run, template, static_file
 from datetime import date
-from news import crawl
 
 d = date.today()
 date = d.isoformat()
-day = d.strftime('%Y%m%d')
+date = d.strftime('%Y-%m-%d')
 
-news = crawl();
+@route('/')
+def index():
+    con = sqlite3.connect('news.db')
+    c = con.cursor()
+    c.execute("select * from headline where day='%s'" % date)
+    result = c.fetchall()
+    c.close()
+    output = template('index', rows=result)
+    return output 
 
-con = sqlite3.connect('news.db')
-cur = con.cursor()
+@route('/static/<filename:path>')
+def giveCss(filename):
+    return static_file(filename, root='static/')
 
-sqlP = 'insert into PUB values(?, ?)'
-sqlT  = 'insert into TITLE values(?, ?, ?, ?)'
+run(host='0.0.0.0', debug=True)
+#run(port=8080)
 
-#insert data in DB
-for i in range(len(news)):
-    try:
-        url = ('http://news.naver.com/main/list.nhn?mode=LPOD&mid=sec&oid=%s&listYple=paper&date=%s' % (news[i][0], day))
-        cur.execute(sqlT, (date, news[i][0], news[i][2], url)); 
-    except:
-        pass
-    #insert PubId & PUB in table PUB
-    #cur.execute(sqlP, (news[i][0], news[i][1]));
 
-con.commit()
-con.close()
+
