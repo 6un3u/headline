@@ -1,13 +1,13 @@
 import sqlite3
 from bottle import route, run, template, static_file
-import datetime
+from datetime import date
 @route('/')
 def index():
-    d = datetime.date.today()
-    date = d.strftime('%Y-%m-%d')
+    d = date.today()
+    d= d.strftime('%Y-%m-%d')
     con = sqlite3.connect('news.db')
     c = con.cursor()
-    c.execute("select * from headline where day='%s'" % date)
+    c.execute("select * from headline where day='%s'" % d)
     result = c.fetchall()
     c.close()
     output = template('index', rows=result)
